@@ -3,8 +3,9 @@ name = "ILI9225-rs"
 version = "0.0.1"
 authors = ["413<the413reply@gmail.com>"]
 edition = "2021"
+description = "A simple crate for ili9225 lcd with embedded-hal "
 repository = "https://github.com/syx-413/ILI9225"
-keywords = ["ili9225", "display", "embedded"]
+keywords = ["ili9225", "spi", "embedded"]
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 [dependencies]
