@@ -11,3 +11,5 @@ This is a library for the ILI9225 based 2.2" 176x220 TFT LCD shields commonly fo
 ILI9341 driver.*
 
 ![ILI9225](/images/ILI9225_TFT.jpg)
+
+thanks https://github.com/sajattack/st7735-lcd-rs
