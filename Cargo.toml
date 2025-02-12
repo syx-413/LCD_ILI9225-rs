@@ -1,6 +1,6 @@
 [package]
 name = "ili9225"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["413<the413reply@gmail.com>"]
 edition = "2021"
 repository = "https://github.com/syx-413/ILI9225"

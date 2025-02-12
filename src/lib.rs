@@ -1,5 +1,14 @@
 #![no_std]
 //! This crate provides a ILI9225 driver to connect to TFT displays.
+//  width
+// --------
+// |      |
+// |      |
+// |      | height
+// |      |
+// |      |
+// --------
+
 pub mod instruction;
 use crate::instruction::Instruction;
 use embedded_hal::delay::DelayNs;
@@ -28,13 +37,16 @@ where
     height: u32,
 }
 /// Display orientation.
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
+#[repr(u16)]
+
 pub enum Orientation {
     Portrait = 0x1030,
     Landscape = 0x1028,
     PortraitSwapped = 0x1000,
     LandscapeSwapped = 0x1018,
 }
+
 impl<SPI, RS, RST> ILI9225<SPI, RS, RST>
 where
     SPI: spi::SpiDevice,
@@ -109,7 +121,7 @@ where
         self.write_command(Instruction::HorizontalWindowAddr2, &[0x00, 0x00])?; //0x0000
         self.write_command(Instruction::VerticalWindowAddr1, &[0x00, 0xDB])?; //0x00DB
         self.write_command(Instruction::VerticalWindowAddr2, &[0x00, 0x00])?; //0x0000
-        // ----------- Adjust the Gamma Curve ----------//
+                                                                              // ----------- Adjust the Gamma Curve ----------//
         self.write_command(Instruction::GammaCtrl1, &[0x00, 0x00])?; //0x0000
         self.write_command(Instruction::GammaCtrl2, &[0x08, 0x08])?; //0x0808
         self.write_command(Instruction::GammaCtrl3, &[0x08, 0x0A])?; //0x080A
@@ -173,7 +185,18 @@ where
         }
         self.write_data(&buffer[0..index])
     }
-    //
+    pub fn set_orientation(&mut self, orientation: &Orientation) -> Result<(), ()> {
+        let mut value = *orientation as u16;
+
+        // 处理颜色顺序（BGR/RGB）
+        if !self.rgb {
+            value |= 0x0800; // 设置Bit8
+        }
+
+        // ILI9225需要16位参数传输
+        self.write_command(Instruction::EntryMode, &value.to_be_bytes())
+    }
+
     // pub fn set_orientation(&mut self, orientation: &Orientation) -> Result<(), ()> {
     //     if self.rgb {
     //         self.write_command(Instruction::MADCTL, &[*orientation as u8])?;
@@ -188,7 +211,6 @@ where
         self.dy = dy;
     }
     /// Sets the address window for the display.
-    ///
     pub fn set_address_window(&mut self, sx: u16, sy: u16, ex: u16, ey: u16) -> Result<(), ()> {
         self.write_command(Instruction::GateScanCtrl, &[])?;
         self.write_command(Instruction::RamAddrSet1, &[])?;
@@ -200,7 +222,7 @@ where
         self.write_word(sy + self.dy)?;
         self.write_word(ey + self.dy)
     }
-    /// Sets a pixel color at the given coords.
+    // Sets a pixel color at the given coords.
     pub fn set_pixel(&mut self, x: u16, y: u16, color: u16) -> Result<(), ()> {
         self.set_address_window(x, y, x, y)?;
         self.write_command(Instruction::GramDataReg, &[])?;
@@ -248,7 +270,6 @@ where
         self.write_pixels_buffered(colors)
     }
 }
-
 
 #[cfg(feature = "graphics")]
 extern crate embedded_graphics_core;
