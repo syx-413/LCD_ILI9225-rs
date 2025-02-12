@@ -1,5 +1,5 @@
 [package]
-name = "ili9225-rs"
+name = "ili9225_rs"
 version = "0.1.0"
 authors = ["413<the413reply@gmail.com>"]
 edition = "2021"
