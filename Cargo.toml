@@ -1,6 +1,6 @@
 [package]
 name = "ILI9225-rs"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["413<the413reply@gmail.com>"]
 edition = "2021"
 description = "A simple crate for ili9225 lcd with embedded-hal "
